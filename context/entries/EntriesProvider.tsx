@@ -8,7 +8,7 @@ export interface EntriesState {
 }
 
 
-const Entries_INITIAL_STATE: EntriesState = {
+const ENTRIES_INITIAL_STATE: EntriesState = {
     entries: [
         {
             _id: uuidv4(),
@@ -34,7 +34,7 @@ const Entries_INITIAL_STATE: EntriesState = {
 
 export const EntriesProvider: FC<PropsWithChildren> = ({ children }) => {
 
-    const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
+    const [state, dispatch] = useReducer(entriesReducer, ENTRIES_INITIAL_STATE);
 
     const addEntry = (description: string) => {
         const newEntry: IEntry = {
@@ -47,12 +47,18 @@ export const EntriesProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: '[Entry] - Add-Entry', payload: newEntry })
     }
 
+    const updateEntry = (entry: IEntry) => {
+        dispatch({ type: '[Entry] - Update-Entry', payload: entry })
+    }
+
     return (
         <EntriesContext.Provider value={{
             ...state,
 
             // methods
-            addEntry
+            addEntry,
+            updateEntry
+
         }}>
             {children}
         </EntriesContext.Provider>
