@@ -5,7 +5,7 @@ import { createContext } from 'react';
 interface ContextProps {
     entries: IEntry[];
     addEntry: (description: string) => void;
-    updateEntry: (entry: IEntry) => void
+    updateEntry: (entry: IEntry, showAlert: boolean) => void;
 }
 
 
