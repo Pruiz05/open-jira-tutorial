@@ -45,7 +45,7 @@ export const EntryItem: FC<Props> = ({
         </CardContent>
 
         <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-          <Typography variant='body2'> {dateFunctions.getFormatDistanceToNow(entry.createdAt)}</Typography>
+          <Typography variant='body2'> {dateFunctions.getFormatDistanceToNow(entry?.createdAt)}</Typography>
         </CardActions>
       </CardActionArea>
     </Card>

@@ -20,6 +20,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return updateEntry(req, res);
     case "GET":
       return getEntryById(req, res);
+    case "DELETE":
+      return deleteEntryById(req, res);
     default:
       return res.status(400).json({
         message: "method not exist",
@@ -27,7 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const  getEntryById = async (req: NextApiRequest, res: NextApiResponse) =>  {
+const getEntryById = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   await db.connect();
@@ -40,9 +42,8 @@ const  getEntryById = async (req: NextApiRequest, res: NextApiResponse) =>  {
     });
   }
 
-
   return res.status(200).json(entry!);
-}
+};
 
 const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id } = req.query;
@@ -82,11 +83,42 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   } catch (error: any) {
     await db.disconnect();
     res.status(400).json({
-        message: JSON.stringify({ message: error.errors.status.message})
+      message: JSON.stringify({ message: error.errors.status.message }),
     });
-
   }
 };
 
+const deleteEntryById = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const { id } = req.query;
 
+  await db.connect();
 
+  const entryToDelete = await Entry.findById(id);
+
+  if (!entryToDelete) {
+    await db.disconnect();
+    return res.status(400).json({
+      message: "No entries found with id: " + id,
+    });
+  }
+
+  try {
+    await Entry.deleteOne({
+      id,
+    });
+
+    await db.disconnect();
+
+    res.status(200).json({
+      message: "Entry deleted",
+    });
+  } catch (error: any) {
+    await db.disconnect();
+    res.status(400).json({
+      message: JSON.stringify({ message: error.errors.status.message }),
+    });
+  }
+};

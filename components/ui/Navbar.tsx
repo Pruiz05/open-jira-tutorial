@@ -14,11 +14,9 @@ export const Navbar = () => {
           <MenuIcon />
         </IconButton>
         <NextLink href='/' passHref>
-          <Link underline='none' color='white'>
-            <Typography variant='h6'>
-              OpenJira
-            </Typography>
-          </Link>
+          <Typography variant='h6' color='white'>
+            OpenJira
+          </Typography>
         </NextLink>
       </Toolbar>
 

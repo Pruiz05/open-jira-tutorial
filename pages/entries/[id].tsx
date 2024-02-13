@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layouts'
-import { capitalize, Button, Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, IconButton } from '@mui/material'
+import { capitalize, Button, Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, IconButton, Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } from '@mui/material'
 import React, { ChangeEvent, FC, useContext, useMemo, useState } from 'react'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
@@ -24,8 +24,20 @@ const EntryPage: FC<Props> = ({
     const [inputValue, setInputValue] = useState(entry.description)
     const [status, setStatus] = useState<EntryStatus>(entry.status)
     const [touched, setTouched] = useState(false)
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+
     const {
-        updateEntry
+        updateEntry,
+        deleteEntry
     } = useContext(EntriesContext)
 
     const isInvalid = useMemo(() => inputValue.length <= 0 && touched, [inputValue, touched])
@@ -53,6 +65,11 @@ const EntryPage: FC<Props> = ({
 
         updateEntry(updatedEntry, true)
 
+        router.push('/')
+    }
+
+    const handleDelete = () => {
+        deleteEntry(entry._id)
         router.push('/')
     }
 
@@ -100,9 +117,31 @@ const EntryPage: FC<Props> = ({
                 </Grid>
             </Grid>
 
-            <IconButton sx={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'red' }}>
+            <IconButton sx={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'red' }} onClick={handleClickOpen}>
                 <DeleteForeverOutlinedIcon />
             </IconButton>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Delete this entry?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to delete this entry?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Disagree</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Layout>
     )
 }
